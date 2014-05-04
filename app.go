@@ -35,8 +35,7 @@ func profile(w http.ResponseWriter, r *http.Request, vars map[string]string) {
     err := mongoCollection.Find(bson.M{"name": vars["name"]}).One(&result)
     if err != nil {
       http.Error(w, err.Error(), 500)
-    }
-    else {
+    } else {
       writeJson(w, result)
     }
 }
