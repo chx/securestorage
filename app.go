@@ -36,7 +36,9 @@ func profile(w http.ResponseWriter, r *http.Request, vars map[string]string) {
     if err != nil {
       http.Error(w, err.Error(), 500)
     }
-    writeJson(w, result)
+    else {
+      writeJson(w, result)
+    }
 }
 
 func store(w http.ResponseWriter, r *http.Request, vars map[string]string) {
