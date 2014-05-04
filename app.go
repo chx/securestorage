@@ -34,7 +34,7 @@ func profile(w http.ResponseWriter, r *http.Request, vars map[string]string) {
     var result *interface{}
     err := mongoCollection.Find(bson.M{"name": vars["name"]}).One(&result)
     if err != nil {
-      // @TODO
+      http.Error(w, err.Error(), 500)
     }
     writeJson(w, result)
 }
@@ -43,7 +43,7 @@ func store(w http.ResponseWriter, r *http.Request, vars map[string]string) {
     var m map[string]interface{}
     err := json.NewDecoder(r.Body).Decode(&m)
     if err != nil {
-        w.Write([]byte(err.Error()))
+        http.Error(w, err.Error(), 500)
     }
     m["name"] = vars["name"];
     err = mongoCollection.Insert(m);
@@ -55,7 +55,7 @@ func store(w http.ResponseWriter, r *http.Request, vars map[string]string) {
 func writeJson(w http.ResponseWriter, v interface{}) {
     data, err := json.Marshal(v)
     if err != nil {
-        log.Printf("Error marshalling json: %v", err)
+        http.Error(w, err.Error(), 500)
     } else {
         w.Header().Set("Content-Length", strconv.Itoa(len(data)))
         w.Header().Set("Content-Type", "application/json")
