@@ -40,6 +40,9 @@ func profile(w http.ResponseWriter, r *http.Request, vars map[string]string) {
 }
 
 func store(w http.ResponseWriter, r *http.Request, vars map[string]string) {
+    // This is a map with string keys and any type as value.
+    // "When mgo marshals a struct, it lowercases the fields by default" so
+    // a struct wouldn't work.
     var m map[string]interface{}
     err := json.NewDecoder(r.Body).Decode(&m)
     if err != nil {
@@ -48,7 +51,7 @@ func store(w http.ResponseWriter, r *http.Request, vars map[string]string) {
     m["name"] = vars["name"];
     err = mongoCollection.Insert(m);
     if err != nil {
-        log.Println(err.Error())
+        http.Error(w, err.Error(), 500)
     }
 }
 
@@ -62,4 +65,3 @@ func writeJson(w http.ResponseWriter, v interface{}) {
         w.Write(data)
     }
 }
-
